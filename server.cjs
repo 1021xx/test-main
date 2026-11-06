@@ -1,0 +1,3 @@
+const http=require('node:http'),fs=require('node:fs'),path=require('node:path');
+const manifest=require('./manifest.json');
+http.createServer((req,res)=>{const u=new URL(req.url,'http://localhost');const item=manifest[u.pathname+u.search]||manifest[u.pathname];if(!item){res.writeHead(404);return res.end('Not saved: '+u.pathname);}fs.readFile(path.join(__dirname,item.file),(err,data)=>{if(err){res.writeHead(404);return res.end();}res.writeHead(200,{'Content-Type':item.type,'Cache-Control':'no-cache'});res.end(data);});}).listen(4186,'127.0.0.1',()=>console.log('Preview: http://127.0.0.1:4186'));
