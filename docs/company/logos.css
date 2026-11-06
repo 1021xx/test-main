@@ -1,0 +1,76 @@
+#company.company-logo-section{gap:28px}
+#company .company-logo-heading{font-family:var(--font-geist-sans),"Malgun Gothic",sans-serif;font-size:16px;line-height:1.7;text-align:center;word-break:keep-all}
+#company .client-logo-marquee{width:100%;max-width:1280px;display:grid;gap:8px}
+#company .client-logo-window{width:100%;overflow:hidden;mask-image:linear-gradient(to right,transparent,#000 7%,#000 93%,transparent);-webkit-mask-image:linear-gradient(to right,transparent,#000 7%,#000 93%,transparent)}
+#company .client-logo-track{display:flex;width:max-content;animation:client-logos-scroll var(--logo-duration,88s) linear infinite;will-change:transform}
+#company .client-logo-track-reverse{animation-direction:reverse}
+#company .client-logo-group{display:flex;flex:none;gap:24px;padding-right:24px}
+#company .client-logo-cell{position:relative;flex:0 0 176px;width:176px;height:88px}
+#company .client-logo-art{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(var(--logo-scale));transform-origin:center}
+#company .client-logo-art img{display:block}
+#company .client-logo-marquee:focus-within .client-logo-track{animation-play-state:paused}
+@keyframes client-logos-scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media(max-width:767px){#company.company-logo-section{padding-top:52px;gap:20px}#company .company-logo-heading{font-size:14px;max-width:290px}#company .client-logo-group{gap:10px;padding-right:10px}#company .client-logo-cell{width:144px;flex-basis:144px;height:76px}#company .client-logo-art{transform:translate(-50%,-50%) scale(calc(var(--logo-scale)*.85))}}
+@media(prefers-reduced-motion:reduce){#company .client-logo-track{animation:none;transform:none;will-change:auto}#company .client-logo-group[aria-hidden]{display:none}#company .client-logo-window{overflow-x:auto;mask-image:none;-webkit-mask-image:none}}
+
+#company .d14{position:absolute;display:block;inset:0px;max-width:none;width:100%;height:100%}
+#company .d102{position:absolute;inset:0px;overflow:hidden;pointer-events:none}
+#company .d136{height:18.878px;position:relative;flex-shrink:0;width:150.352px}
+#company .d137{height:19.581px;position:relative;flex-shrink:0;width:154.483px}
+#company .d138{height:24.476px;position:relative;flex-shrink:0;width:144.693px}
+#company .d139{position:absolute;height:289.71%;left:0px;max-width:none;top:-89.71%;width:100%}
+#company .d140{height:35.664px;position:relative;flex-shrink:0;width:106.993px}
+#company .d141{position:absolute;inset:0px;max-width:none;object-fit:cover;pointer-events:none;width:100%;height:100%}
+#company .d142{height:27.972px;position:relative;flex-shrink:0;width:125.552px}
+#company .d143{position:absolute;height:277.78%;left:-0.95%;max-width:none;top:-88.89%;width:101.91%}
+#company .d144{height:53.147px;position:relative;flex-shrink:0;width:93.007px}
+#company .d145{height:45.455px;position:relative;flex-shrink:0;width:120.979px}
+#company .d146{height:24.476px;position:relative;flex-shrink:0;width:100.914px}
+#company .d147{height:51.049px;position:relative;flex-shrink:0;width:95.105px}
+#company .d148{position:absolute;height:330%;left:-78.49%;max-width:none;top:-109%;width:269.89%}
+#company .d149{height:27.972px;position:relative;flex-shrink:0;width:114.639px}
+#company .d150{height:31.469px;position:relative;flex-shrink:0;width:125.874px}
+#company .d151{position:absolute;height:220.19%;left:0px;max-width:none;top:-99.04%;width:100%}
+#company .d152{height:18.881px;position:relative;flex-shrink:0;width:147.127px}
+#company .d153{height:31.469px;position:relative;flex-shrink:0;width:105.594px}
+#company .d154{height:34.965px;position:relative;flex-shrink:0;width:116.783px}
+#company .d155{position:absolute;height:150.84%;left:0px;max-width:none;top:-20.42%;width:100%}
+#company .d156{height:26.573px;position:relative;flex-shrink:0;width:139.86px}
+#company .d157{height:30.769px;position:relative;flex-shrink:0;width:153.147px}
+#company .d158{height:36.364px;position:relative;flex-shrink:0;width:157.343px}
+#company .d159{position:absolute;height:432.69%;left:0px;max-width:none;top:-165.38%;width:100%}
+#company .d160{height:24.476px;position:relative;flex-shrink:0;width:90.987px}
+#company .d161{height:34.965px;position:relative;flex-shrink:0;width:112.428px}
+#company .d162{height:43.357px;position:relative;flex-shrink:0;width:145.454px}
+#company .d163{height:67.832px;position:relative;flex-shrink:0;width:102.098px}
+#company .d164{height:48.951px;position:relative;flex-shrink:0;width:107.186px}
+#company .d165{height:53.846px;position:relative;flex-shrink:0;width:130.769px}
+#company .d166{position:absolute;height:269.01%;left:-30.35%;max-width:none;top:-90.14%;width:173.41%}
+#company .d167{height:48.951px;position:relative;flex-shrink:0;width:141.789px}
+#company .d168{height:51.748px;position:relative;flex-shrink:0;width:97.902px}
+#company .d169{position:relative;flex-shrink:0;width:51.748px;height:51.748px}
+#company .d170{height:34.965px;position:relative;flex-shrink:0;width:110.126px}
+#company .d171{height:20.979px;position:relative;flex-shrink:0;width:145.954px}
+#company .d172{height:14.685px;position:relative;flex-shrink:0;width:147.552px}
+/* Compact, neutral customer strip aligned with the surrounding interface. */
+#company.company-logo-section{padding-top:52px;padding-bottom:32px;gap:18px}
+#company .company-logo-heading{font-size:14px;line-height:1.6;letter-spacing:-.02em}
+#company .client-logo-marquee{gap:4px}
+#company .client-logo-group{gap:16px;padding-right:16px}
+#company .client-logo-cell{width:144px;flex-basis:144px;height:64px}
+#company .client-logo-art{transform:translate(-50%,-50%) scale(calc(var(--logo-scale)*.75));filter:grayscale(1);opacity:.72;mix-blend-mode:multiply}
+.dark #company .client-logo-art{filter:grayscale(1) invert(1);opacity:.72;mix-blend-mode:screen}
+@media(max-width:767px){
+ #company.company-logo-section{padding-top:36px;padding-bottom:24px;gap:14px}
+ #company .company-logo-heading{font-size:13px}
+ #company .client-logo-group{gap:8px;padding-right:8px}
+ #company .client-logo-cell{width:120px;flex-basis:120px;height:54px}
+ #company .client-logo-art{transform:translate(-50%,-50%) scale(calc(var(--logo-scale)*.64))}
+}
+
+#company .client-logo-window{background-color:var(--background)}
+#company .client-logo-track{mix-blend-mode:multiply}
+.dark #company .client-logo-track{mix-blend-mode:screen}
+#company .client-logo-art,.dark #company .client-logo-art{mix-blend-mode:normal}
+
+#company .company-logo-heading{font-size:16px;font-weight:700}
