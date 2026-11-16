@@ -8,8 +8,12 @@ Node.js가 설치된 환경에서 프로젝트 폴더를 열고 `node server.cjs
 
 HTML과 브라우저용 정적 자산으로 구성된 미리보기 프로젝트입니다. 별도 백엔드 서비스는 포함되어 있지 않습니다.
 
+회사소개는 `/company`, 제품 소개는 `/gaia`, `/ezcms`, `/garpa`, `/ezpaper`에서 열립니다. 각 페이지 본문은 `pages/`에서, 공통 헤더와 푸터는 `shared/`에서 관리합니다.
+
 ## 공개 미리보기 업데이트
 
 원본 HTML이나 이미지, 스타일을 수정한 뒤 프로젝트 폴더에서 `node build-pages.cjs`를 실행해 `docs/`를 갱신하세요. 원본 변경과 갱신된 `docs/`를 함께 커밋해 `main`에 푸시하면 GitHub Pages가 다시 배포합니다.
+
+`components/certificates/`를 수정한 경우 `npm ci`와 `npm run build:certificates`로 인증서 번들을 먼저 갱신한 뒤 `node build-pages.cjs`를 실행하세요.
 
 배포 원본은 `main` 브랜치의 `/docs` 폴더입니다.

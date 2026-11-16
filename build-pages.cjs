@@ -1,6 +1,8 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const manifest = require('./manifest.json');
+const { getPages, renderHome, renderPage, sharedFiles } = require('./lib/site.cjs');
+const { adaptHomeAsset } = require('./lib/legacy-home.cjs');
 
 const output = path.join(__dirname, 'docs');
 const base = '/test-main';
@@ -14,7 +16,7 @@ const extensions = {
   'image/webp': '.webp',
 };
 
-for (const [request, asset] of Object.entries(manifest)) {
+for (const [request, asset] of Object.entries({ ...manifest, ...sharedFiles })) {
   const [pathname, query] = request.split('?');
   const mime = asset.type.split(';')[0];
   let target = pathname === '/' ? '/index.html' : pathname;
@@ -41,22 +43,36 @@ const routePattern = new RegExp(
   'g',
 );
 
+const pages = getPages();
+const pageLinks = new Map([['/', '/'], ...pages.map(({ path }) => [path, path + '/'])]);
+
+function rewriteForPages(content) {
+  return content
+    .replace(routePattern, (route) => routes.get(route))
+    .replace(/(?<![\w/])\/(?:_next|assets|gaia|company|shared)\//g, (prefix) => base + prefix)
+    .replace(/(?<![\w/])\/(?:favicon\.svg|agent-cta-background\.png)\b/g, (url) => base + url)
+    .replace(/(\bhref=\\?")(\/[^\\?"#\s]*)(?=[#?]|\\?")/g, (match, attribute, pathname) => (
+      pageLinks.has(pathname) ? attribute + base + pageLinks.get(pathname) : match
+    ))
+    .replace(/(\\"src\\":\\"\/test-main\/agent-cta-background\.png\\",)/g, '$1\\"unoptimized\\":true,')
+    .replace(/<script src="[^"]*\/polyfills-42372ed130431b0a\.js[^"]*"\s+noModule=""><\/script>/g, '');
+}
+
 for (const [target, asset] of files) {
   const source = path.join(__dirname, asset.file);
   const destination = path.join(output, target.slice(1));
   fs.mkdirSync(path.dirname(destination), { recursive: true });
   if (/^(text\/(html|css)|application\/javascript)/.test(asset.type)) {
-    const content = fs.readFileSync(source, 'utf8')
-      .replace(routePattern, (route) => routes.get(route))
-      .replace(/(?<![\w/])\/(?:_next|assets|gaia|company)\//g, (prefix) => base + prefix)
-      .replace(/(?<![\w/])\/(?:favicon\.svg|agent-cta-background\.png)\b/g, (url) => base + url)
-      .replace(/href="\/"/g, `href="${base}/"`)
-      .replace(/(\\"src\\":\\"\/test-main\/agent-cta-background\.png\\",)/g, '$1\\"unoptimized\\":true,')
-      .replace(/<script src="[^"]*\/polyfills-42372ed130431b0a\.js[^"]*"\s+noModule=""><\/script>/g, '');
-    fs.writeFileSync(destination, content);
+    const content = target === '/index.html' ? renderHome() : adaptHomeAsset(asset.file, fs.readFileSync(source, 'utf8'));
+    fs.writeFileSync(destination, rewriteForPages(content));
   } else {
     fs.copyFileSync(source, destination);
   }
+}
+for (const page of pages) {
+  const destination = path.join(output, page.path.slice(1), 'index.html');
+  fs.mkdirSync(path.dirname(destination), { recursive: true });
+  fs.writeFileSync(destination, rewriteForPages(renderPage(page)));
 }
 fs.writeFileSync(path.join(output, '.nojekyll'), '');
 console.log(`Wrote ${files.size} files to docs/`);

@@ -630,5 +630,81 @@
   "/assets/ezpaper-dark.svg": {
     "file": "assets/ezpaper-dark.svg",
     "type": "image/svg+xml"
+  },
+  "/company/assets/checkbox.svg": {
+    "file": "company/assets/checkbox.svg",
+    "type": "image/svg+xml"
+  },
+  "/company/assets/intro_certi01.png": {
+    "file": "company/assets/intro_certi01.png",
+    "type": "image/png"
+  },
+  "/company/assets/intro_certi02.png": {
+    "file": "company/assets/intro_certi02.png",
+    "type": "image/png"
+  },
+  "/company/assets/intro_certi03.png": {
+    "file": "company/assets/intro_certi03.png",
+    "type": "image/png"
+  },
+  "/company/assets/intro_certi04.png": {
+    "file": "company/assets/intro_certi04.png",
+    "type": "image/png"
+  },
+  "/company/assets/intro_certi05.png": {
+    "file": "company/assets/intro_certi05.png",
+    "type": "image/png"
+  },
+  "/company/assets/intro_visual01.png": {
+    "file": "company/assets/intro_visual01.png",
+    "type": "image/png"
+  },
+  "/company/assets/intro_visual02.png": {
+    "file": "company/assets/intro_visual02.png",
+    "type": "image/png"
+  },
+  "/company/assets/value_01.png": {
+    "file": "company/assets/value_01.png",
+    "type": "image/png"
+  },
+  "/company/assets/value_02.png": {
+    "file": "company/assets/value_02.png",
+    "type": "image/png"
+  },
+  "/company/assets/value_03.png": {
+    "file": "company/assets/value_03.png",
+    "type": "image/png"
+  },
+  "/company/assets/values-standardization.webp": {
+    "file": "company/assets/values-standardization.webp",
+    "type": "image/webp"
+  },
+  "/company/assets/values-global.webp": {
+    "file": "company/assets/values-global.webp",
+    "type": "image/webp"
+  },
+  "/company/assets/values-innovation.webp": {
+    "file": "company/assets/values-innovation.webp",
+    "type": "image/webp"
+  },
+  "/company/assets/values-standardization-dark.webp": {
+    "file": "company/assets/values-standardization-dark.webp",
+    "type": "image/webp"
+  },
+  "/company/assets/values-global-dark.webp": {
+    "file": "company/assets/values-global-dark.webp",
+    "type": "image/webp"
+  },
+  "/company/assets/values-innovation-dark.webp": {
+    "file": "company/assets/values-innovation-dark.webp",
+    "type": "image/webp"
+  },
+  "/shared/certificates.js": {
+    "file": "shared/certificates.js",
+    "type": "application/javascript; charset=utf-8"
+  },
+  "/shared/certificates.css": {
+    "file": "shared/certificates.css",
+    "type": "text/css; charset=utf-8"
   }
 }

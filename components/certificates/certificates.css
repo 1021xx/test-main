@@ -1,0 +1,30 @@
+.agency-certificates-interactive { width: 100%; }
+.agency-certificates-stage { display: flex; align-items: center; justify-content: center; padding-top: 70px; }
+.agency-company-certificates .folder-photo img { object-fit: contain; background: #fff; }
+.agency-certificates-hint { text-align: center; color: var(--muted-foreground); font-size: 13px; margin-top: 16px; }
+@media(max-width: 640px) { .agency-certificates-stage { padding-top: 40px; } .agency-certificates-hint { font-size: 12px; line-height: 1.7; } }
+
+.agency-certificate-document { height: 100%; display: flex; flex-direction: column; padding: calc(9px * var(--folder-scale)); gap: calc(6px * var(--folder-scale)); color: #303238; background: #fff; }
+.agency-certificate-document-heading { flex: none; text-align: left; line-height: 1.4; }
+.agency-certificate-document-heading strong { display: block; font-size: calc(9px * var(--folder-scale)); font-weight: 650; letter-spacing: -.04em; }
+.agency-certificate-document-heading span { display: block; margin-top: 2px; font-size: calc(8px * var(--folder-scale)); color: #777b82; }
+.agency-certificate-document img { display: block; width: 100%; height: auto; flex: 0 1 auto; min-height: 0; object-fit: contain; object-position: top; }
+
+.agency-certificate-document { width: 100%; max-width: 300px; box-sizing: border-box; }
+/* Explicit neutral-gray stops keep the front and rear surfaces distinct. */
+.agency-company-certificates .folder-root[data-variant='solid'] .folder-face-outer {
+  background: linear-gradient(160deg, #e6e7e9 0%, #d3d5d8 46%, #bfc2c7 100%);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 75%), inset 0 0 0 1px rgb(255 255 255 / 25%);
+}
+.agency-company-certificates .folder-root[data-variant='solid'] .folder-back-fill,
+.agency-company-certificates .folder-root[data-variant='solid'] .folder-face-inner {
+  background: linear-gradient(180deg, #cfd1d5 0%, #b6bac0 100%);
+}
+.agency-company-certificates .folder-tab-text { color: #52565e; }
+.agency-company-certificates .folder-item {
+  box-shadow:
+    0 0 0 .5px rgb(0 0 0 / 4%),
+    0 1px 3px rgb(0 0 0 / 5%),
+    0 calc((2px + var(--folder-lift, 0) * 3px) * var(--folder-scale))
+      calc((8px + var(--folder-lift, 0) * 5px) * var(--folder-scale)) rgb(0 0 0 / 9%);
+}

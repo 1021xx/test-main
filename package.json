@@ -1,0 +1,15 @@
+{
+  "name": "agencypro-local-preview",
+  "private": true,
+  "scripts": {
+    "start": "node server.cjs",
+    "build:certificates": "esbuild components/certificates/index.jsx --bundle --minify --jsx=automatic --outfile=shared/certificates.js"
+  },
+  "dependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.0"
+  }
+}
