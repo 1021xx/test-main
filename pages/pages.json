@@ -1,6 +1,6 @@
 [
   { "path": "/company", "title": "회사소개", "template": "company.html" },
-  { "path": "/gaia", "title": "GAIA", "template": "product.html" },
+  { "path": "/gaia", "title": "GAIA", "template": "gaia.html" },
   { "path": "/ezcms", "title": "ezCMS", "template": "product.html" },
   { "path": "/garpa", "title": "GARPA", "template": "product.html" },
   { "path": "/ezpaper", "title": "ezPAPER", "template": "product.html" }

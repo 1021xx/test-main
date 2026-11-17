@@ -362,3 +362,290 @@
     observer.observe(graphic);
   }
 })();
+
+(() => {
+  const canvas = document.querySelector('.agency-gaia-solution-dots');
+  const context = canvas?.getContext('2d');
+  if (!context) return;
+
+  const size = 800;
+  const spacing = 10;
+  const columns = size / spacing;
+  const opacity = Float32Array.from({ length: columns * columns }, () => Math.random() * .1);
+  const scale = window.devicePixelRatio || 1;
+  canvas.width = size * scale;
+  canvas.height = size * scale;
+  context.scale(scale, scale);
+  context.fillStyle = '#000';
+
+  function draw() {
+    context.clearRect(0, 0, size, size);
+    for (let index = 0; index < opacity.length; index++) {
+      context.globalAlpha = opacity[index];
+      context.fillRect((index % columns) * spacing, Math.floor(index / columns) * spacing, 4, 4);
+    }
+  }
+
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let frame;
+  let last = 0;
+  function animate(now) {
+    const chance = Math.min(.1, (now - last) * .0001);
+    last = now;
+    for (let index = 0; index < opacity.length; index++) {
+      if (Math.random() < chance) opacity[index] = Math.random() * .1;
+    }
+    draw();
+    frame = requestAnimationFrame(animate);
+  }
+
+  let visible = false;
+  function syncAnimation() {
+    if (visible && !reducedMotion.matches) {
+      if (!frame) {
+        last = performance.now();
+        frame = requestAnimationFrame(animate);
+      }
+    } else {
+      cancelAnimationFrame(frame);
+      frame = undefined;
+    }
+  }
+  draw();
+  new IntersectionObserver(([entry]) => {
+    visible = entry.isIntersecting;
+    syncAnimation();
+  }).observe(canvas);
+  reducedMotion.addEventListener('change', syncAnimation);
+})();
+
+(() => {
+  const section = document.querySelector('.agency-gaia-steps');
+  if (!section) return;
+
+  const categoryList = section.querySelector('.agency-gaia-category-tabs');
+  const categories = [...categoryList.querySelectorAll('[role="tab"]')];
+  const groups = categories.map(tab => {
+    const panel = document.getElementById(tab.getAttribute('aria-controls'));
+    const layout = panel.querySelector('.agency-gaia-steps-layout');
+    const list = layout.querySelector('[role="tablist"]');
+    const tabs = [...list.querySelectorAll('[role="tab"]')];
+    const previews = tabs.map(detail => document.getElementById(detail.getAttribute('aria-controls')));
+    return { panel, layout, list, tabs, previews, selected: 0 };
+  });
+  const desktop = matchMedia('(min-width: 1024px)');
+  const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+  const duration = 5000;
+  let activeCategory = 0;
+  let timer;
+  let visible = false;
+
+  function updateTabs(tabs, panels, selected) {
+    tabs.forEach((tab, index) => {
+      tab.setAttribute('aria-selected', String(index === selected));
+      tab.tabIndex = index === selected ? 0 : -1;
+      panels[index].hidden = index !== selected;
+    });
+  }
+
+  function midpoint(element) {
+    const { left, width } = element.getBoundingClientRect();
+    return left + width / 2;
+  }
+
+  function centerDetail(group, smooth) {
+    if (desktop.matches || group.panel.hidden) return;
+    group.list.scrollTo({
+      left: group.list.scrollLeft + midpoint(group.tabs[group.selected]) - midpoint(group.list),
+      behavior: smooth && !reducedMotion.matches ? 'smooth' : 'instant'
+    });
+  }
+
+  function schedule() {
+    clearTimeout(timer);
+    const group = groups[activeCategory];
+    const playing = visible && !group.manualScrolling && !reducedMotion.matches && !document.hidden;
+    group.layout.toggleAttribute('data-playing', playing);
+    if (playing) timer = setTimeout(() => selectDetail(group, (group.selected + 1) % group.tabs.length), duration);
+  }
+
+  function selectDetail(group, index, scroll = true) {
+    if (index === group.selected) return;
+    group.selected = index;
+    updateTabs(group.tabs, group.previews, index);
+    if (scroll) centerDetail(group, true);
+    schedule();
+  }
+
+  function positionCategoryIndicator(animate = false) {
+    const { left, width } = categories[activeCategory].getBoundingClientRect();
+    const listLeft = categoryList.getBoundingClientRect().left + categoryList.clientLeft;
+    categoryList.toggleAttribute('data-indicator-animate', animate && !reducedMotion.matches);
+    categoryList.style.setProperty("--gaia-tab-x", left - listLeft + "px");
+    categoryList.style.setProperty("--gaia-tab-width", width + "px");
+  }
+
+  function selectCategory(index) {
+    if (index === activeCategory) return;
+    groups[activeCategory].layout.removeAttribute('data-playing');
+    activeCategory = index;
+    updateTabs(categories, groups.map(group => group.panel), index);
+    positionCategoryIndicator(true);
+    centerDetail(groups[index], false);
+    schedule();
+  }
+
+  function bindTabs(list, tabs, select) {
+    tabs.forEach((tab, index) => tab.addEventListener('click', () => select(index)));
+    list.addEventListener('keydown', event => {
+      const vertical = list.getAttribute('aria-orientation') === 'vertical';
+      const previous = vertical ? 'ArrowUp' : 'ArrowLeft';
+      const next = vertical ? 'ArrowDown' : 'ArrowRight';
+      const index = tabs.indexOf(document.activeElement);
+      let target;
+      if (event.key === 'Home') target = 0;
+      else if (event.key === 'End') target = tabs.length - 1;
+      else if (event.key === previous) target = (index - 1 + tabs.length) % tabs.length;
+      else if (event.key === next) target = (index + 1) % tabs.length;
+      else return;
+      event.preventDefault();
+      tabs[target].focus({ preventScroll: true });
+      select(target);
+    });
+  }
+
+  bindTabs(categoryList, categories, selectCategory);
+  groups.forEach(group => {
+    bindTabs(group.list, group.tabs, index => selectDetail(group, index));
+    let touching = false;
+    let settleTimer;
+    let mouseDrag;
+    let suppressMouseClick = false;
+
+    function syncScrolledTab(centerTab = false) {
+      if (touching || mouseDrag?.moved) return;
+      clearTimeout(settleTimer);
+      const wasManualScrolling = group.manualScrolling;
+      group.manualScrolling = false;
+      if (group.panel.hidden) return;
+      if (!desktop.matches) {
+        const center = midpoint(group.list);
+        const index = group.tabs.reduce((closest, tab, i) =>
+          Math.abs(midpoint(tab) - center) < Math.abs(midpoint(group.tabs[closest]) - center) ? i : closest, 0);
+        if (index !== group.selected) {
+          selectDetail(group, index, false);
+          if (centerTab) centerDetail(group, false);
+          return;
+        }
+      }
+      if (centerTab) centerDetail(group, false);
+      if (wasManualScrolling) schedule();
+    }
+
+    // Also settle after a tap or on browsers that do not fire scrollend.
+    function queueScrollSettle() {
+      clearTimeout(settleTimer);
+      settleTimer = setTimeout(syncScrolledTab, 180);
+    }
+
+    group.list.addEventListener('touchstart', () => {
+      if (desktop.matches || group.panel.hidden) return;
+      clearTimeout(settleTimer);
+      touching = true;
+      group.manualScrolling = true;
+      schedule();
+    }, { passive: true });
+    function releaseTouch(event) {
+      if (!touching || event.touches.length) return;
+      touching = false;
+      queueScrollSettle();
+    }
+    group.list.addEventListener('touchend', releaseTouch, { passive: true });
+    group.list.addEventListener('touchcancel', releaseTouch, { passive: true });
+    group.list.addEventListener('scroll', () => {
+      if (group.manualScrolling && !touching && !mouseDrag?.moved) queueScrollSettle();
+    }, { passive: true });
+    group.list.addEventListener('scrollend', () => syncScrolledTab());
+
+    group.list.addEventListener('pointerdown', event => {
+      if (desktop.matches || event.pointerType !== 'mouse' || event.button !== 0) return;
+      suppressMouseClick = false;
+      mouseDrag = { id: event.pointerId, x: event.clientX, left: group.list.scrollLeft, moved: false };
+      // Keep ordinary clicks on the original button and keep tracking outside the list.
+      event.target.setPointerCapture(event.pointerId);
+    });
+    group.list.addEventListener('pointermove', event => {
+      if (mouseDrag?.id !== event.pointerId || desktop.matches) return;
+      const distance = event.clientX - mouseDrag.x;
+      if (!mouseDrag.moved) {
+        if (Math.abs(distance) < 6) return;
+        mouseDrag.moved = true;
+        clearTimeout(settleTimer);
+        group.manualScrolling = true;
+        group.list.setAttribute('data-mouse-dragging', '');
+        schedule();
+      }
+      group.list.scrollTo({ left: mouseDrag.left - distance, behavior: 'instant' });
+    });
+    function endMouseDrag(event) {
+      if (mouseDrag?.id !== event.pointerId) return;
+      const { moved } = mouseDrag;
+      mouseDrag = null;
+      if (!moved) return;
+      suppressMouseClick = true;
+      syncScrolledTab(true);
+      group.list.removeAttribute('data-mouse-dragging');
+    }
+    group.list.addEventListener('pointerup', endMouseDrag);
+    group.list.addEventListener('pointercancel', endMouseDrag);
+    group.list.addEventListener('lostpointercapture', endMouseDrag);
+    group.list.addEventListener('click', event => {
+      if (!suppressMouseClick || !event.detail) return;
+      suppressMouseClick = false;
+      event.preventDefault();
+      event.stopPropagation();
+    }, true);
+  });
+
+  function selectFromHash() {
+    const index = categories.findIndex(tab => '#' + tab.id === location.hash);
+    if (index < 0) return;
+    selectCategory(index);
+    section.scrollIntoView({ block: 'start', behavior: reducedMotion.matches ? 'instant' : 'smooth' });
+  }
+
+  document.querySelectorAll('.agency-gaia-solution-card').forEach(card => {
+    card.addEventListener('click', event => {
+      if (event.defaultPrevented || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      const index = categories.findIndex(tab => '#' + tab.id === card.hash);
+      if (index < 0) return;
+      event.preventDefault();
+      if (location.hash !== card.hash) history.pushState(null, '', card.hash);
+      categories[index].focus({ preventScroll: true });
+      selectFromHash();
+    });
+  });
+  addEventListener('hashchange', selectFromHash);
+
+  function updateOrientation() {
+    for (const group of groups) group.list.setAttribute('aria-orientation', desktop.matches ? 'vertical' : 'horizontal');
+    centerDetail(groups[activeCategory], false);
+  }
+
+  desktop.addEventListener('change', updateOrientation);
+  reducedMotion.addEventListener('change', schedule);
+  document.addEventListener('visibilitychange', schedule);
+  new IntersectionObserver(([entry]) => {
+    visible = entry.isIntersecting;
+    schedule();
+  }, { rootMargin: '-12% 0px -20% 0px' }).observe(section);
+
+  updateOrientation();
+  selectFromHash();
+  positionCategoryIndicator();
+  categoryList.setAttribute("data-indicator-ready", "");
+  // Resize updates follow the buttons immediately instead of animating toward an old size.
+  const categoryResize = new ResizeObserver(() => positionCategoryIndicator());
+  categoryResize.observe(categoryList);
+  categories.forEach(tab => categoryResize.observe(tab));
+})();

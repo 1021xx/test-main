@@ -1,4 +1,19 @@
 {
+  "/gaia/assets/gaia_hr_05.png": { "file": "gaia/assets/gaia_hr_05.png", "type": "image/png" },
+  "/gaia/assets/gaia_hr_06.png": { "file": "gaia/assets/gaia_hr_06.png", "type": "image/png" },
+  "/gaia/assets/gaia_ct_02.png": { "file": "gaia/assets/gaia_ct_02.png", "type": "image/png" },
+  "/gaia/assets/gaia_ct_05.png": { "file": "gaia/assets/gaia_ct_05.png", "type": "image/png" },
+  "/gaia/assets/gaia_pf_03.png": { "file": "gaia/assets/gaia_pf_03.png", "type": "image/png" },
+  "/gaia/assets/gaia_pf_04.png": { "file": "gaia/assets/gaia_pf_04.png", "type": "image/png" },
+  "/gaia/assets/gaia_bz_02.png": { "file": "gaia/assets/gaia_bz_02.png", "type": "image/png" },
+  "/gaia/assets/gaia_bz_04.png": { "file": "gaia/assets/gaia_bz_04.png", "type": "image/png" },
+  "/gaia/assets/gaia_bz_06.png": { "file": "gaia/assets/gaia_bz_06.png", "type": "image/png" },
+  "/gaia/assets/solution-dashboard.svg": { "file": "gaia/assets/solution-dashboard.svg", "type": "image/svg+xml" },
+  "/gaia/assets/gaia_hr_01.png": { "file": "gaia/assets/gaia_hr_01.png", "type": "image/png" },
+  "/gaia/assets/gaia_ct_01.png": { "file": "gaia/assets/gaia_ct_01.png", "type": "image/png" },
+  "/gaia/assets/gaia_pf_01.png": { "file": "gaia/assets/gaia_pf_01.png", "type": "image/png" },
+  "/gaia/assets/gaia_pf_02.png": { "file": "gaia/assets/gaia_pf_02.png", "type": "image/png" },
+  "/gaia/assets/gaia_bz_01.png": { "file": "gaia/assets/gaia_bz_01.png", "type": "image/png" },
   "/": {
     "file": "index.html",
     "type": "text/html; charset=utf-8"
