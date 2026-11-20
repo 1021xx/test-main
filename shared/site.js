@@ -45,11 +45,6 @@
 
     const link = target?.closest('a');
     if (link?.closest('#agency-mobile-nav')) closeMenu();
-    // The saved homepage has legacy inquiry anchors; point them to existing contact details.
-    if (link?.getAttribute('href') === '#' && link.textContent.trim() === '도입문의') {
-      event.preventDefault();
-      document.getElementById('footer')?.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
-    }
   });
   document.addEventListener('keydown', event => {
     if (event.key === 'Escape' && document.getElementById('agency-mobile-nav')?.hidden === false) closeMenu(true);
@@ -342,11 +337,11 @@
   window.addEventListener('agency-footer-mounted', mount);
 })();
 
-// Play each company principles graphic once when it enters the viewport.
+// Play section motion once as each target enters the viewport.
 (() => {
   if (!('IntersectionObserver' in window)) return;
-  const graphics = document.querySelectorAll('[data-principle-people], [data-principle-flow]');
-  if (!graphics.length) return;
+  const targets = document.querySelectorAll('[data-principle-people], [data-principle-flow], [data-garpa-reveal]');
+  if (!targets.length) return;
 
   const visibilityThreshold = .55;
   const observer = new IntersectionObserver(entries => {
@@ -357,9 +352,9 @@
     }
   }, { threshold: visibilityThreshold });
 
-  for (const graphic of graphics) {
-    graphic.dataset.motion = 'ready';
-    observer.observe(graphic);
+  for (const target of targets) {
+    target.dataset.motion = 'ready';
+    observer.observe(target);
   }
 })();
 
@@ -648,4 +643,129 @@
   const categoryResize = new ResizeObserver(() => positionCategoryIndicator());
   categoryResize.observe(categoryList);
   categories.forEach(tab => categoryResize.observe(tab));
+})();
+
+// ezPAPER service tabs share the GAIA category tab appearance.
+(() => {
+  const list = document.querySelector('.paper-navigation[role="tablist"]');
+  if (!list) return;
+  const tabs = [...list.querySelectorAll('[role="tab"]')];
+  const panels = tabs.map(tab => document.getElementById(tab.getAttribute('aria-controls')));
+  let selected = 0;
+
+  function positionIndicator(animate = false) {
+    const rect = tabs[selected].getBoundingClientRect();
+    list.toggleAttribute('data-indicator-animate', animate);
+    list.style.setProperty('--gaia-tab-x', `${rect.left - list.getBoundingClientRect().left - list.clientLeft}px`);
+    list.style.setProperty('--gaia-tab-width', `${rect.width}px`);
+    list.setAttribute('data-indicator-ready', '');
+  }
+
+  function select(index) {
+    selected = index;
+    tabs.forEach((tab, i) => {
+      tab.setAttribute('aria-selected', String(i === index));
+      tab.tabIndex = i === index ? 0 : -1;
+      panels[i].hidden = i !== index;
+    });
+    positionIndicator(true);
+  }
+
+  tabs.forEach((tab, index) => tab.addEventListener('click', () => select(index)));
+  list.addEventListener('keydown', event => {
+    const index = tabs.indexOf(document.activeElement);
+    if (index < 0) return;
+    const targets = { ArrowLeft: (index + tabs.length - 1) % tabs.length, ArrowRight: (index + 1) % tabs.length, Home: 0, End: tabs.length - 1 };
+    if (!(event.key in targets)) return;
+    event.preventDefault();
+    select(targets[event.key]);
+    tabs[selected].focus();
+  });
+  const observer = new ResizeObserver(() => positionIndicator());
+  observer.observe(list);
+  tabs.forEach(tab => observer.observe(tab));
+  document.fonts.ready.then(() => positionIndicator());
+  positionIndicator();
+})();
+
+(() => {
+  const form = document.getElementById('agency-inquiry-form');
+  if (!form) return;
+
+  const email = form.elements.namedItem('email');
+  const phone = form.elements.namedItem('tel');
+  const consent = form.elements.namedItem('privacy_policy_agree');
+  const button = form.querySelector('button[type="submit"]');
+  const status = form.querySelector('[role="status"]');
+  const personalDomains = new Set(['gmail.com', 'naver.com', 'hanmail.net', 'nate.com', 'daum.net', 'kakao.com']);
+  const fields = [...form.querySelectorAll('input[required], textarea[required]')];
+  const errors = new Map(fields.map(field => {
+    const message = document.createElement('span');
+    message.className = 'agency-inquiry-error';
+    message.id = `inquiry-error-${field.name}`;
+    field.after(message);
+    field.addEventListener('input', () => {
+      if (field.hasAttribute('aria-invalid')) validateField(field);
+    });
+    return [field, message];
+  }));
+
+  function phoneDigits() {
+    return phone.value.replace(/[\s()-]/g, '');
+  }
+
+  function validateField(field) {
+    const value = field.value.trim();
+    let error = '';
+    if (!value) {
+      error = '필수 필드를 입력하십시오.';
+    } else if (field === email) {
+      const domain = value.split('@').pop().toLowerCase();
+      if (email.validity.typeMismatch || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+        error = '이메일 형식이 정확해야 합니다.';
+      } else if (personalDomains.has(domain)) {
+        error = '회사 이메일 주소를 입력하십시오. 이 양식에서는 gmail.com 등의 주소를 사용할 수 없습니다.';
+      }
+    } else if (field === phone && !/^\d{2,11}$/.test(phoneDigits())) {
+      error = '입력한 연락처가 정확하지 않습니다.';
+    }
+    const message = errors.get(field);
+    message.textContent = error;
+    if (error) {
+      field.setAttribute('aria-invalid', 'true');
+      field.setAttribute('aria-describedby', message.id);
+    } else {
+      field.removeAttribute('aria-invalid');
+      field.removeAttribute('aria-describedby');
+    }
+    return !error;
+  }
+
+  form.addEventListener('submit', async event => {
+    event.preventDefault();
+    if (button.disabled) return;
+    const valid = fields.map(validateField).every(Boolean);
+    if (!valid) return;
+    if (!consent.checked) {
+      consent.focus();
+      return;
+    }
+
+    const body = new FormData(form);
+    body.set('tel', phoneDigits());
+    button.disabled = true;
+    status.textContent = '문의를 전송하고 있습니다.';
+    try {
+      const response = await fetch(form.action, { method: 'POST', headers: { Accept: 'application/json' }, body });
+      const result = await response.json();
+      if (!response.ok || !result.success) throw new Error('Inquiry submission failed');
+      form.reset();
+      status.textContent = '문의가 접수되었습니다. 담당팀에서 연락드리겠습니다.';
+    } catch {
+      status.textContent = '문의가 전송되지 않았습니다. 잠시 후 다시 시도하거나 02-582-1570으로 전화해 주세요.';
+    } finally {
+      button.disabled = false;
+    }
+  });
+  button.disabled = false;
 })();

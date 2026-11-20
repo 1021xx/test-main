@@ -1,0 +1,47 @@
+<section class="agency-page-hero agency-container" aria-labelledby="page-title">
+  <h1 id="page-title" class="agency-page-title">도입문의</h1>
+  <p class="agency-section-description">지금의 시스템, 더 스마트하게 개선하고 싶으신가요?</p>
+</section>
+
+{{inquiryTemplateOpen}}<section class="agency-section agency-inquiry-section" aria-label="도입문의 양식과 상담 연락처">
+  <div class="agency-inquiry">
+    <form id="agency-inquiry-form" novalidate action="https://api.web3forms.com/submit" method="post">
+      <input type="hidden" name="access_key" value="{{inquiryAccessKey}}">
+      <input type="hidden" name="subject" value="솔루션 도입 문의">
+      <input type="hidden" name="from_name" value="홈페이지 폼">
+      <div class="agency-inquiry-fields">
+        <label class="agency-inquiry-wide">이메일<span class="agency-inquiry-required" aria-hidden="true">*</span><input name="email" type="email" autocomplete="email" required></label>
+        <label>이름<span class="agency-inquiry-required" aria-hidden="true">*</span><input name="last_name" autocomplete="given-name" required></label>
+        <label>성<span class="agency-inquiry-required" aria-hidden="true">*</span><input name="first_name" autocomplete="family-name" required></label>
+        <label class="agency-inquiry-wide">회사명<span class="agency-inquiry-required" aria-hidden="true">*</span><input name="company" autocomplete="organization" required></label>
+        <label>부서<span class="agency-inquiry-required" aria-hidden="true">*</span><input name="department" required></label>
+        <label>직함<span class="agency-inquiry-required" aria-hidden="true">*</span><input name="position" autocomplete="organization-title" required></label>
+        <label class="agency-inquiry-wide">전화번호<span class="agency-inquiry-required" aria-hidden="true">*</span><input name="tel" type="tel" autocomplete="tel" required></label>
+      </div>
+      <fieldset>
+        <legend>솔루션 적용을 원하는 비즈니스 프로세스를 선택해 주세요. (복수응답 가능)</legend>
+        <div class="agency-inquiry-options">
+          <label><input type="checkbox" name="biz01" value="GA 영업관리">GA 영업관리</label>
+          <label><input type="checkbox" name="biz02" value="GA 수당수수료">GA 수당수수료</label>
+          <label><input type="checkbox" name="biz03" value="RPA 계약관리 자동화">RPA 계약관리 자동화</label>
+          <label><input type="checkbox" name="biz04" value="설계사 위/해촉 자동화">설계사 위/해촉 자동화</label>
+          <label><input type="checkbox" name="biz05" value="고객동의서(상품비교설명, 개인정보 등)">고객동의서(상품비교설명, 개인정보 등)</label>
+          <label><input type="checkbox" name="biz06" value="기타 (투자, 기업 세미나, 회사소개 등)">기타 (투자, 기업 세미나, 회사소개 등)</label>
+        </div>
+      </fieldset>
+      <label class="agency-inquiry-message">귀사에서 해결하고자 하는 문제에 대한 배경 정보를 작성해 주시면, 적합한 팀에서 신속히 연락드리겠습니다.<span class="agency-inquiry-required" aria-hidden="true">*</span><textarea name="inquiry" rows="1" required></textarea></label>
+      <div class="agency-inquiry-options">
+        <label><input type="checkbox" name="privacy_policy_agree" value="개인정보처리방침 동의" aria-required="true"><span>(필수) <a href="https://www.agencypro.co.kr/policy/page1.html" target="_blank" rel="noopener">개인정보처리방침</a>을 확인하였으며, 개인정보 수집 및 이용에 동의합니다.<span class="agency-inquiry-required" aria-hidden="true">*</span></span></label>
+        <label><input type="checkbox" name="marketing_advertising_agree" value="마케팅 및 광고 활용 동의"><span>(선택) <a href="https://www.agencypro.co.kr/policy/page1.html" target="_blank" rel="noopener">마케팅 및 광고 활용</a>에 동의합니다.</span></label>
+      </div>
+      <button class="agency-button agency-inquiry-submit" type="submit" disabled>제출</button>
+      <p class="agency-inquiry-status" role="status" aria-live="polite"></p>
+    </form>
+  </div>
+</section>
+
+{{inquiryTemplateClose}}<section class="agency-section agency-inquiry-contact" aria-labelledby="inquiry-contact-title">
+  <h2 id="inquiry-contact-title">고객상담센터</h2>
+  <a href="tel:025821570">02-582-1570</a>
+  <p>상담시간 09:30 - 18:30</p>
+</section>

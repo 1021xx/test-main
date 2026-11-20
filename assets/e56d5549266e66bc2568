@@ -77,7 +77,6 @@ header a.bg-secondary:hover,.dark header a.bg-secondary:hover{background-color:#
 #hero a{letter-spacing:0}
 @media(max-width:767px){#hero h1{letter-spacing:-.03em;line-height:1.4}#hero h1+p{line-height:1.7}}
 
-#hero h1+p,#hero a{font-family:var(--font-geist-sans),"Pretendard","Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif}
 
 /* Keep the Korean hero heading on the requested two lines. */
 #hero h1{font-size:clamp(12px,4vw,36px);line-height:1.35;letter-spacing:-.03em;white-space:pre;word-break:keep-all;text-wrap:nowrap}

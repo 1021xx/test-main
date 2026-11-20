@@ -54,6 +54,9 @@ function rewriteForPages(content) {
     .replace(/(\bhref=\\?")(\/[^\\?"#\s]*)(?=[#?]|\\?")/g, (match, attribute, pathname) => (
       pageLinks.has(pathname) ? attribute + base + pageLinks.get(pathname) : match
     ))
+    .replace(/((?:\\?"href\\?"|\bhref):\s*\\?")(\/[^\\?"#\s]*)(?=[#?]|\\?")/g, (match, attribute, pathname) => (
+      pageLinks.has(pathname) ? attribute + base + pageLinks.get(pathname) : match
+    ))
     .replace(/(\\"src\\":\\"\/test-main\/agent-cta-background\.png\\",)/g, '$1\\"unoptimized\\":true,')
     .replace(/<script src="[^"]*\/polyfills-42372ed130431b0a\.js[^"]*"\s+noModule=""><\/script>/g, '');
 }

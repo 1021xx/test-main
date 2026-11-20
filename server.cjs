@@ -2,8 +2,14 @@ const http = require('node:http');
 const fs = require('node:fs');
 const path = require('node:path');
 const manifest = require('./manifest.json');
-const { getPages, renderHome, renderPage, sharedFiles } = require('./lib/site.cjs');
+const { getPages, renderHome, renderPage } = require('./lib/site.cjs');
 const { adaptHomeAsset, adaptedFiles } = require('./lib/legacy-home.cjs');
+
+const sharedFiles = {
+  '/shared/site.css': { file: 'shared/site.css', type: 'text/css; charset=utf-8' },
+  '/shared/site.js': { file: 'shared/site.js', type: 'application/javascript; charset=utf-8' },
+  '/shared/theme.js': { file: 'shared/theme.js', type: 'application/javascript; charset=utf-8' }
+};
 
 function createServer() {
   return http.createServer((req, res) => {
@@ -24,7 +30,9 @@ function createServer() {
         return res.end();
       }
       if (normalizedPath === '/') return send(200, 'text/html; charset=utf-8', renderHome());
-      if (page) return send(200, 'text/html; charset=utf-8', renderPage(page));
+      if (page) return send(200, 'text/html; charset=utf-8', renderPage(page, {
+        inquiryAccessKey: process.env.WEB3FORMS_ACCESS_KEY?.trim()
+      }));
 
       // Only registered assets are served; source templates and server files stay private.
       const item = sharedFiles[url.pathname] || manifest[url.pathname + url.search] || manifest[url.pathname];
