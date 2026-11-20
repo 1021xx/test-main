@@ -5,12 +5,6 @@ const manifest = require('./manifest.json');
 const { getPages, renderHome, renderPage } = require('./lib/site.cjs');
 const { adaptHomeAsset, adaptedFiles } = require('./lib/legacy-home.cjs');
 
-const sharedFiles = {
-  '/shared/site.css': { file: 'shared/site.css', type: 'text/css; charset=utf-8' },
-  '/shared/site.js': { file: 'shared/site.js', type: 'application/javascript; charset=utf-8' },
-  '/shared/theme.js': { file: 'shared/theme.js', type: 'application/javascript; charset=utf-8' }
-};
-
 function createServer() {
   return http.createServer((req, res) => {
     const send = (status, type, body) => {
@@ -35,7 +29,7 @@ function createServer() {
       }));
 
       // Only registered assets are served; source templates and server files stay private.
-      const item = sharedFiles[url.pathname] || manifest[url.pathname + url.search] || manifest[url.pathname];
+      const item = manifest[url.pathname + url.search] || manifest[url.pathname];
       if (!item) return send(404, 'text/plain; charset=utf-8', 'Not found');
       let data = fs.readFileSync(path.join(__dirname, item.file));
       if (adaptedFiles.includes(item.file.replaceAll('\\', '/'))) data = adaptHomeAsset(item.file, data.toString('utf8'));

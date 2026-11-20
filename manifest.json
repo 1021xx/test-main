@@ -759,6 +759,18 @@
     "file": "company/assets/values-innovation-dark.webp",
     "type": "image/webp"
   },
+  "/shared/site.css": {
+    "file": "shared/site.css",
+    "type": "text/css; charset=utf-8"
+  },
+  "/shared/site.js": {
+    "file": "shared/site.js",
+    "type": "application/javascript; charset=utf-8"
+  },
+  "/shared/theme.js": {
+    "file": "shared/theme.js",
+    "type": "application/javascript; charset=utf-8"
+  },
   "/shared/certificates.js": {
     "file": "shared/certificates.js",
     "type": "application/javascript; charset=utf-8"

@@ -690,7 +690,7 @@
 
 (() => {
   const form = document.getElementById('agency-inquiry-form');
-  if (!form) return;
+  if (!form?.elements.namedItem('access_key')?.value) return;
 
   const email = form.elements.namedItem('email');
   const phone = form.elements.namedItem('tel');

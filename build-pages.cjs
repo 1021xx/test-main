@@ -1,7 +1,8 @@
 const fs = require('node:fs');
 const path = require('node:path');
+const { createHash } = require('node:crypto');
 const manifest = require('./manifest.json');
-const { getPages, renderHome, renderPage, sharedFiles } = require('./lib/site.cjs');
+const { getPages, renderHome, renderPage } = require('./lib/site.cjs');
 const { adaptHomeAsset } = require('./lib/legacy-home.cjs');
 
 const output = path.join(__dirname, 'docs');
@@ -16,7 +17,9 @@ const extensions = {
   'image/webp': '.webp',
 };
 
-for (const [request, asset] of Object.entries({ ...manifest, ...sharedFiles })) {
+const sharedHash = createHash('sha256');
+for (const [request, asset] of Object.entries(manifest)) {
+  if (request.startsWith('/shared/')) sharedHash.update(fs.readFileSync(path.join(__dirname, asset.file)));
   const [pathname, query] = request.split('?');
   const mime = asset.type.split(';')[0];
   let target = pathname === '/' ? '/index.html' : pathname;
@@ -36,6 +39,7 @@ for (const [request, asset] of Object.entries({ ...manifest, ...sharedFiles })) 
   }
   files.set(target, asset);
 }
+const sharedVersion = sharedHash.digest('hex').slice(0, 12);
 
 const routePattern = new RegExp(
   [...routes.keys()].sort((a, b) => b.length - a.length)
@@ -51,6 +55,7 @@ function rewriteForPages(content) {
     .replace(routePattern, (route) => routes.get(route))
     .replace(/(?<![\w/])\/(?:_next|assets|gaia|company|shared)\//g, (prefix) => base + prefix)
     .replace(/(?<![\w/])\/(?:favicon\.svg|agent-cta-background\.png)\b/g, (url) => base + url)
+    .replace(/(\b(?:href|src)="\/test-main\/shared\/[^"?#]+)(?=")/g, '$1?v=' + sharedVersion)
     .replace(/(\bhref=\\?")(\/[^\\?"#\s]*)(?=[#?]|\\?")/g, (match, attribute, pathname) => (
       pageLinks.has(pathname) ? attribute + base + pageLinks.get(pathname) : match
     ))

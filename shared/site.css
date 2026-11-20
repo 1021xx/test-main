@@ -1182,6 +1182,9 @@ html { scroll-behavior: smooth; scroll-padding-top: 6rem; }
 .agency-inquiry-contact p { font-size: 16px; line-height: 24px; }
 .agency-inquiry-contact p, .agency-inquiry-contact a { color: var(--inquiry-contact); }
 .agency-inquiry form { display: grid; gap: 1.125rem; min-width: 0; }
+.agency-inquiry-controls { display: grid; gap: 1.125rem; min-width: 0; }
+.agency-inquiry-notice { margin-bottom: 1.125rem; }
+.agency-inquiry-notice a { font-weight: 700; text-decoration: underline; }
 .agency-inquiry-fields, .agency-inquiry-options { display: grid; gap: 8px; }
 .agency-inquiry-fields { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.125rem; }
 .agency-inquiry-wide { grid-column: 1 / -1; }
